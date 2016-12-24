@@ -1,5 +1,5 @@
 from unittest import TestCase, main
-from permutations import *
+from permint import *
 
 
 class Tests(TestCase):
