@@ -44,7 +44,6 @@ def variable_to_absolute_positions(var):
     for e, p in enumerate(var):
         absolute[pointers[p]] = e
         del pointers[p]
-
     return absolute
 
 
@@ -53,3 +52,9 @@ def integer_to_permutation(integer, n):
     var_pos = list(integer_to_variable_positions(integer, n))
     var_pos.append(0)
     return variable_to_absolute_positions(var_pos)
+
+
+__all__ = [
+    'permutation_to_integer',
+    'integer_to_permutation',
+]
