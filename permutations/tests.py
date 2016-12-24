@@ -1,6 +1,8 @@
 from unittest import TestCase, main
 import random
 from permint import *
+import ordering
+from ordering import *
 import permint
 
 
@@ -52,12 +54,25 @@ class ProbabilisticTest(TestCase):
 
     def test_random(self):
         """Random generation of permutations"""
+        tries = 20
         number = 100
-        elements = self.get_shuffled(number)
-        integer = permutation_to_integer(elements)
-        print(integer)
-        permutation = integer_to_permutation(integer, number)
-        self.assertEqual(elements, permutation)
+        for _ in range(tries):
+            elements = self.get_shuffled(number)
+            integer = permutation_to_integer(elements)
+            permutation = integer_to_permutation(integer, number)
+            self.assertEqual(elements, permutation)
+
+
+class OrderingTest(TestCase):
+    """Check properties of ordering data"""
+
+    def test_uniqueness(self):
+        """The names of objects are unique"""
+        data = ordering.load_ordering(None)
+        for dataset in data.values():
+            current = dataset['ordering']
+            self.assertEqual(len(set([y[0] for y in current])), len(current))
+            self.assertEqual(len(set([y[2] for y in current])), len(current))
 
 if __name__ == "__main__":
     main()
