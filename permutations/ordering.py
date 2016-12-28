@@ -41,6 +41,13 @@ def names_to_permutation(labels):
 
 def permutation_to_names(permutation, key, description):
     """Convert a list of 0÷n-1 integers to the selected names permutation"""
+    ordering = load_ordering(key)
+    table = ordering['ordering']
+    index = ordering['description'].index(description)
+    out = []
+    for position in permutation:
+        out.append(table[position][index])
+    return out
 
 
 def encode(ordering_id, objects):

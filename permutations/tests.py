@@ -75,11 +75,29 @@ class OrderingTest(TestCase):
             self.assertEqual(len(set([y[2] for y in current])), len(current))
 
 
-class CardsPermutationIntegerTest(TestCase):
+class CardsPermutationTest(TestCase):
     """Check the conversion cards permutation <-> integer"""
 
+    CARDS1 = ('Q♠ K♦ 7♦ Q♥ 3♣ 7♠ 10♣ K♥ 5♦ 4♣ 9♣ 3♠ 6♠ J♠ 5♣ A♣ 8♥ A♦ K♣ 6♥ '
+              '4♦ A♥ 10♠ A♠ 6♣ J♣ 5♠ 7♣ K♠ 10♦ 5♥ J♦ 8♠ 7♥ J♥ 9♦ 3♦ 9♠ 4♠ Q♣ '
+              '2♣ 2♥ 4♥ 9♥ 6♦ Q♦ 8♦ 2♦ 3♥ 10♥ 2♠ 8♣')
+    CARDS2 = ('Otto di Cuori, Quattro di Fiori, Asso di Cuori, Dieci di Fiori,'
+              'Cinque di Fiori, Sette di Cuori, Fante di Fiori, Otto di Fiori,'
+              'Tre di Fiori, Otto di Quadri, Nove di Quadri, Tre di Picche,'
+              'Dieci di Cuori, Nove di Cuori, Cinque di Quadri,'
+              'Fante di Picche, Fante di Cuori, Re di Fiori, Re di Quadri,'
+              'Due di Fiori, Otto di Picche, Asso di Quadri, Dieci di Quadri,'
+              'Sei di Quadri, Due di Quadri, Cinque di Picche,'
+              'Quattro di Picche, Tre di Quadri, Re di Picche, Due di Picche,'
+              'Nove di Picche, Sei di Cuori, Sette di Fiori, Sei di Picche,'
+              'Asso di Picche, Sette di Quadri, Nove di Fiori, Sei di Fiori,'
+              'Tre di Cuori, Quattro di Quadri, Donna di Cuori,'
+              'Dieci di Picche, Due di Cuori, Asso di Fiori, Sette di Picche,'
+              'Donna di Quadri, Cinque di Cuori, Donna di Picche,'
+              'Donna di Fiori, Quattro di Cuori, Re di Cuori, Fante di Quadri')
+
     def test_to_permutation(self):
-        """Permutation to integer"""
+        """Cards to permutation"""
 
         def test(cards):
             """local operations"""
@@ -91,33 +109,33 @@ class CardsPermutationIntegerTest(TestCase):
             permutation = ordering.names_to_permutation(split)
             self.assertEqual(set(permutation), set(range(len(split))))
 
-        cards = ('Q♠ K♦ 7♦ Q♥ 3♣ 7♠ 10♣ K♥ 5♦ 4♣ 9♣ 3♠ 6♠ J♠ 5♣ A♣ 8♥ A♦ '
-                 'K♣ 6♥ 4♦ A♥ 10♠ A♠ 6♣ J♣ 5♠ 7♣ K♠ 10♦ 5♥ J♦ 8♠ 7♥ J♥ 9♦ '
-                 '3♦ 9♠ 4♠ Q♣ 2♣ 2♥ 4♥ 9♥ 6♦ Q♦ 8♦ 2♦ 3♥ 10♥ 2♠ 8♣')
-        test(cards)
-
-        cards = ('Otto di Cuori, Quattro di Fiori, Asso di Cuori,'
-                 'Dieci di Fiori, Cinque di Fiori, Sette di Cuori,'
-                 'Fante di Fiori, Otto di Fiori, Tre di Fiori, Otto di Quadri,'
-                 'Nove di Quadri, Tre di Picche, Dieci di Cuori,'
-                 'Nove di Cuori, Cinque di Quadri, Fante di Picche,'
-                 'Fante di Cuori, Re di Fiori, Re di Quadri, Due di Fiori,'
-                 'Otto di Picche, Asso di Quadri, Dieci di Quadri,'
-                 'Sei di Quadri, Due di Quadri, Cinque di Picche,'
-                 'Quattro di Picche, Tre di Quadri, Re di Picche,'
-                 'Due di Picche, Nove di Picche, Sei di Cuori, Sette di Fiori,'
-                 'Sei di Picche, Asso di Picche, Sette di Quadri,'
-                 'Nove di Fiori, Sei di Fiori, Tre di Cuori,'
-                 'Quattro di Quadri, Donna di Cuori, Dieci di Picche,'
-                 'Due di Cuori, Asso di Fiori, Sette di Picche,'
-                 'Donna di Quadri, Cinque di Cuori, Donna di Picche,'
-                 'Donna di Fiori, Quattro di Cuori, Re di Cuori,'
-                 'Fante di Quadri')
-        test(cards)
+        test(self.CARDS1)
+        test(self.CARDS2)
 
         cards = 'Not Supported Test'
         with self.assertRaises(NotImplementedError):
             ordering.names_to_permutation(cards.split())
+
+    def test_from_permutation(self):
+        """Permutation to cards"""
+
+        permutation = list(range(52))
+        names = ordering.permutation_to_names(permutation, 'French', 'Symbols')
+        self.assertEqual(len(names), len(permutation))
+        self.assertEqual(len(set(names)), len(names))
+
+        random.shuffle(permutation)
+        names = ordering.permutation_to_names(permutation, 'French', 'Symbols')
+        self.assertEqual(len(names), len(permutation))
+        self.assertEqual(len(set(names)), len(names))
+
+    def test_consistency(self):
+        """Transform in both directions and check the result"""
+
+        split = self.CARDS1.split()
+        permutation = ordering.names_to_permutation(split)
+        names = ordering.permutation_to_names(permutation, 'French', 'Symbols')
+        self.assertEqual(split, names)
 
 if __name__ == "__main__":
     main()
