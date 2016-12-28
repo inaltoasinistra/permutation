@@ -56,7 +56,8 @@
       ["K♠", "", "Re di Picche"]]
   },
   "Italian": {
-    "description": ["Symbols", "English", "Cups Coins Clubs Swords"],
+    "description": [
+      "Symbols", "English", "Italian", "Cups Coins Clubs Swords"],
     "ordering": []
   }
 }
