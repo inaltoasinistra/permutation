@@ -1,0 +1,8 @@
+{
+  "cards1": "Q♠ K♦ 7♦ Q♥ 3♣ 7♠ 10♣ K♥ 5♦ 4♣ 9♣ 3♠ 6♠ J♠ 5♣ A♣ 8♥ A♦ K♣ 6♥ 4♦ A♥ 10♠ A♠ 6♣ J♣ 5♠ 7♣ K♠ 10♦ 5♥ J♦ 8♠ 7♥ J♥ 9♦ 3♦ 9♠ 4♠ Q♣ 2♣ 2♥ 4♥ 9♥ 6♦ Q♦ 8♦ 2♦ 3♥ 10♥ 2♠ 8♣",
+  "cards1_encoded": 33818542677730096711044726219946250852785237893777227476219986896510,
+  "cards2": "Otto di Cuori, Quattro di Fiori, Asso di Cuori, Dieci di Fiori,Cinque di Fiori, Sette di Cuori, Fante di Fiori, Otto di Fiori,Tre di Fiori, Otto di Quadri, Nove di Quadri, Tre di Picche,Dieci di Cuori, Nove di Cuori, Cinque di Quadri,Fante di Picche, Fante di Cuori, Re di Fiori, Re di Quadri,Due di Fiori, Otto di Picche, Asso di Quadri, Dieci di Quadri,Sei di Quadri, Due di Quadri, Cinque di Picche,Quattro di Picche, Tre di Quadri, Re di Picche, Due di Picche,Nove di Picche, Sei di Cuori, Sette di Fiori, Sei di Picche,Asso di Picche, Sette di Quadri, Nove di Fiori, Sei di Fiori,Tre di Cuori, Quattro di Quadri, Donna di Cuori,Dieci di Picche, Due di Cuori, Asso di Fiori, Sette di Picche,Donna di Quadri, Cinque di Cuori, Donna di Picche,Donna di Fiori, Quattro di Cuori, Re di Cuori, Fante di Quadri",
+  "cards2_encoded": 4372304083288693469944074409465535080239513526751210351901685634821,
+  "test": "3 4 5 1 2",
+  "test_encoded": 100
+}
