@@ -1,6 +1,7 @@
 import json
 import os
 import sys
+from permint import *
 
 
 def load_ordering(key, directory=None):
@@ -35,6 +36,8 @@ def names_to_permutation(labels):
                 out = []
                 for label in labels:
                     out.append(ord_labels.index(label))
+                assert len(out) == len(names_set), \
+                    'labels cannot be an iterator'
                 return out
     raise NotImplementedError('Input names are not supported')
 
@@ -50,13 +53,17 @@ def permutation_to_names(permutation, key, description):
     return out
 
 
-def encode(ordering_id, objects):
+def encode(names):
     """Encode a list of objects to ordering positions"""
+    permutation = names_to_permutation(names)
+    return permutation_to_integer(permutation)
 
 
-def decode(ordering_id, positions):
+def decode(ordering_id, description, integer):
     """Encode a list of ordering positions to objects"""
-
+    ordering_len = len(load_ordering(ordering_id)['ordering'])
+    permutation = integer_to_permutation(integer, ordering_len)
+    return permutation_to_names(permutation, ordering_id, description)
 
 __all__ = [
     "encode",

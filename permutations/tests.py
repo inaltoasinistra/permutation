@@ -1,10 +1,23 @@
 from unittest import TestCase, main
 import random
+import os
+import sys
+import json
 from permint import *
 import ordering
 from ordering import *
 import permint
 
+
+def get_test_data():
+    """Read data/tests.json"""
+    path = os.path.join(os.path.dirname(sys.argv[0]), 'data', 'tests.json')
+    with open(path, 'rt') as f:
+        return json.load(f)
+
+def fact(x):
+    """Factorial"""
+    return x * fact(x - 1) if x else 1
 
 class Tests(TestCase):
     """General test"""
@@ -71,30 +84,15 @@ class OrderingTest(TestCase):
         data = ordering.load_ordering(None)
         for dataset in data.values():
             current = dataset['ordering']
-            self.assertEqual(len(set([y[0] for y in current])), len(current))
-            self.assertEqual(len(set([y[2] for y in current])), len(current))
+            for column in ordering.column_iter(current):
+                # Skip placeholder columns
+                if set(column) != {''}:
+                    self.assertEqual(len(set(column)), len(current))
 
 
 class CardsPermutationTest(TestCase):
     """Check the conversion cards permutation <-> integer"""
-
-    CARDS1 = ('Q♠ K♦ 7♦ Q♥ 3♣ 7♠ 10♣ K♥ 5♦ 4♣ 9♣ 3♠ 6♠ J♠ 5♣ A♣ 8♥ A♦ K♣ 6♥ '
-              '4♦ A♥ 10♠ A♠ 6♣ J♣ 5♠ 7♣ K♠ 10♦ 5♥ J♦ 8♠ 7♥ J♥ 9♦ 3♦ 9♠ 4♠ Q♣ '
-              '2♣ 2♥ 4♥ 9♥ 6♦ Q♦ 8♦ 2♦ 3♥ 10♥ 2♠ 8♣')
-    CARDS2 = ('Otto di Cuori, Quattro di Fiori, Asso di Cuori, Dieci di Fiori,'
-              'Cinque di Fiori, Sette di Cuori, Fante di Fiori, Otto di Fiori,'
-              'Tre di Fiori, Otto di Quadri, Nove di Quadri, Tre di Picche,'
-              'Dieci di Cuori, Nove di Cuori, Cinque di Quadri,'
-              'Fante di Picche, Fante di Cuori, Re di Fiori, Re di Quadri,'
-              'Due di Fiori, Otto di Picche, Asso di Quadri, Dieci di Quadri,'
-              'Sei di Quadri, Due di Quadri, Cinque di Picche,'
-              'Quattro di Picche, Tre di Quadri, Re di Picche, Due di Picche,'
-              'Nove di Picche, Sei di Cuori, Sette di Fiori, Sei di Picche,'
-              'Asso di Picche, Sette di Quadri, Nove di Fiori, Sei di Fiori,'
-              'Tre di Cuori, Quattro di Quadri, Donna di Cuori,'
-              'Dieci di Picche, Due di Cuori, Asso di Fiori, Sette di Picche,'
-              'Donna di Quadri, Cinque di Cuori, Donna di Picche,'
-              'Donna di Fiori, Quattro di Cuori, Re di Cuori, Fante di Quadri')
+    DATA = get_test_data()
 
     def test_to_permutation(self):
         """Cards to permutation"""
@@ -109,8 +107,8 @@ class CardsPermutationTest(TestCase):
             permutation = ordering.names_to_permutation(split)
             self.assertEqual(set(permutation), set(range(len(split))))
 
-        test(self.CARDS1)
-        test(self.CARDS2)
+        test(self.DATA['cards1'])
+        test(self.DATA['cards2'])
 
         cards = 'Not Supported Test'
         with self.assertRaises(NotImplementedError):
@@ -132,10 +130,99 @@ class CardsPermutationTest(TestCase):
     def test_consistency(self):
         """Transform in both directions and check the result"""
 
-        split = self.CARDS1.split()
+        split = self.DATA['cards1'].split()
         permutation = ordering.names_to_permutation(split)
         names = ordering.permutation_to_names(permutation, 'French', 'Symbols')
         self.assertEqual(split, names)
+
+
+class CardsPermutationIntegerTest(TestCase):
+    """Cards to integer back and forth"""
+    DATA = get_test_data()
+
+    def test_to_integer(self):
+        """cards to integer"""
+        integer = encode(self.DATA['cards1'].split(' '))
+        self.assertEqual(integer, self.DATA['cards1_encoded'])
+
+        integer = encode([y.strip() for y in self.DATA['cards2'].split(',')])
+        self.assertEqual(integer, self.DATA['cards2_encoded'])
+
+        # The ordering of cards is encoded to 0
+        cards = [y[0] for y in ordering.load_ordering('French')['ordering']]
+        self.assertEqual(encode(cards), 0)
+
+        self.assertEqual(encode(list(reversed(cards))), fact(52) - 1)
+
+        cards = [y[2] for y in ordering.load_ordering('French')['ordering']]
+        self.assertEqual(encode(cards), 0)
+
+        cards = [y[0] for y in ordering.load_ordering('test')['ordering']]
+        self.assertEqual(encode(cards), 0)
+
+    def test_from_integer(self):
+        """Integer to cards"""
+        cards = decode('French', 'Symbols', self.DATA['cards1_encoded'])
+        self.assertEqual(cards, self.DATA['cards1'].split())
+
+        cards = decode('French', 'Italian', self.DATA['cards2_encoded'])
+        split = [y.strip() for y in self.DATA['cards2'].split(',')]
+        self.assertEqual(cards, split)
+
+        # Decode 0
+
+        split = [y[0] for y in ordering.load_ordering('French')['ordering']]
+        self.assertEqual(decode('French', 'Symbols', 0), split)
+
+        split = [y[2] for y in ordering.load_ordering('French')['ordering']]
+        self.assertEqual(decode('French', 'Italian', 0), split)
+
+        split = [y[0] for y in ordering.load_ordering('test')['ordering']]
+        self.assertEqual(decode('test', 'test', 0), split)
+
+        # Decode fact(n) - 1
+
+        number = len(ordering.load_ordering('French')['ordering'])
+        integer = fact(number) - 1
+
+        split = [y[0] for y in ordering.load_ordering('French')['ordering']]
+        self.assertEqual(decode('French', 'Symbols', integer), split[::-1])
+
+        split = [y[2] for y in ordering.load_ordering('French')['ordering']]
+        self.assertEqual(decode('French', 'Italian', integer), split[::-1])
+
+        split = [y[0] for y in ordering.load_ordering('test')['ordering']]
+        self.assertEqual(decode('test', 'test', integer), split[::-1])
+
+    def test_back_and_forth(self):
+        """Check both directions. Cards -> integer -> cards"""
+        def test(cards_in, ordering_id, description):
+            """Local operations"""
+            integer = encode(cards_in)
+            cards_out = decode(ordering_id, description, integer)
+            self.assertEqual(cards_in, cards_out)
+
+        split = [y.strip() for y in self.DATA['cards1'].split(' ')]
+        for _ in range(100):
+            test(split, 'French', 'Symbols')
+            random.shuffle(split)
+
+        split = [y.strip() for y in self.DATA['cards2'].split(',')]
+        for _ in range(100):
+            test(split, 'French', 'Italian')
+            random.shuffle(split)
+
+    def test_mapping(self):
+        """Test that all permutations are different"""
+        ordering_id = 'test'
+        description = 'test'
+        permutations = set()
+        number = len(ordering.load_ordering(ordering_id)['ordering'])
+        for integer in range(fact(number)):
+            perm = tuple(decode(ordering_id, description, integer))
+            self.assertNotIn(perm, permutations)
+            permutations.add(perm)
+        self.assertEqual(len(permutations), fact(number))
 
 if __name__ == "__main__":
     main()

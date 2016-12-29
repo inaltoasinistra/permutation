@@ -59,5 +59,9 @@
     "description": [
       "Symbols", "English", "Italian", "Cups Coins Clubs Swords"],
     "ordering": []
+  },
+  "test": {
+    "description": ["test"],
+    "ordering": [["1"], ["2"], ["3"], ["4"], ["5"]]
   }
 }
