@@ -7,6 +7,8 @@ from permint import *
 import ordering
 from ordering import *
 import permint
+from mnemonic import *
+import mnemonic
 
 
 def get_test_data():
@@ -223,6 +225,57 @@ class CardsPermutationIntegerTest(TestCase):
             self.assertNotIn(perm, permutations)
             permutations.add(perm)
         self.assertEqual(len(permutations), fact(number))
+
+
+class MnemonicTest(TestCase):
+    """Test consistency of mnemonic conversion"""
+    DATA = get_test_data()
+    eng = [y for y in DATA['mnemonics_eng'] if y[0] != '#']
+    ita = [y for y in DATA['mnemonics_ita'] if y[0] != '#']
+
+    def test_to_integer(self):
+        """Test mnemonic to integer using the test data"""
+        for words in self.eng + self.ita:
+            split = words[0].split()
+            self.assertEqual(mnemonic_to_integer(split), words[1])
+
+    def test_from_integer(self):
+        """Test integer to mnemonic using the test data"""
+        for words in self.eng:
+            split = words[0].split()
+            self.assertEqual(integer_to_mnemonic(words[1], 'english'), split)
+
+        for words in self.ita:
+            split = words[0].split()
+            self.assertEqual(integer_to_mnemonic(words[1], 'italian'), split)
+
+    def test_back_and_forth(self):
+        """Back and forth on mnemonics of test data"""
+
+        for words in self.eng:
+            split = words[0].split()
+            self.assertEqual(
+                split, integer_to_mnemonic(mnemonic_to_integer(split)), split)
+
+        for words in self.ita:
+            split = words[0].split()
+            print(split)
+            print(mnemonic_to_integer(split))
+            self.assertEqual(
+                split, integer_to_mnemonic(
+                    mnemonic_to_integer(split), 'italian'), split)
+
+    def test_length(self):
+        """Supported length"""
+        for words in self.eng + self.ita:
+            split = words[0].split()
+            self.assertIn(len(split), mnemonic.WORDS_NUMBER, split)
+
+    def test_words_length(self):
+        """Check input"""
+
+        with self.assertRaises(ValueError):
+            mnemonic_to_integer(['boring', 'drum'])
 
 if __name__ == "__main__":
     main()

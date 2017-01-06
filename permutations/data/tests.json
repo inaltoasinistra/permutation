@@ -4,5 +4,28 @@
   "cards2": "Otto di Cuori, Quattro di Fiori, Asso di Cuori, Dieci di Fiori,Cinque di Fiori, Sette di Cuori, Fante di Fiori, Otto di Fiori,Tre di Fiori, Otto di Quadri, Nove di Quadri, Tre di Picche,Dieci di Cuori, Nove di Cuori, Cinque di Quadri,Fante di Picche, Fante di Cuori, Re di Fiori, Re di Quadri,Due di Fiori, Otto di Picche, Asso di Quadri, Dieci di Quadri,Sei di Quadri, Due di Quadri, Cinque di Picche,Quattro di Picche, Tre di Quadri, Re di Picche, Due di Picche,Nove di Picche, Sei di Cuori, Sette di Fiori, Sei di Picche,Asso di Picche, Sette di Quadri, Nove di Fiori, Sei di Fiori,Tre di Cuori, Quattro di Quadri, Donna di Cuori,Dieci di Picche, Due di Cuori, Asso di Fiori, Sette di Picche,Donna di Quadri, Cinque di Cuori, Donna di Picche,Donna di Fiori, Quattro di Cuori, Re di Cuori, Fante di Quadri",
   "cards2_encoded": 4372304083288693469944074409465535080239513526751210351901685634821,
   "test": "3 4 5 1 2",
-  "test_encoded": 100
+  "test_encoded": 100,
+  "mnemonics_eng": [
+    "# electrum",
+    "# 12",
+    ["boring rival will drum world blossom void sorry jazz aisle alone math", 552239688579859758403374231179535432776],
+    ["february wood detect fee toddler earth trash type blossom gap purpose palace", 1794428244949806595444634412677600091385],
+    ["earn holiday network embrace able unaware discover antenna popular learn crisp place", 1473914698328026995460248581986115710254],
+    "# https://iancoleman.github.io/bip39/",
+    ["scorpion giggle unique rival gesture goddess submit tube toddler rocket unusual wall", 4108332103815697354579591966530570262453],
+    ["claw owner spend cry festival human grass trim there copy spin grant", 894884338204161601246013737505500986157],
+    "# 24",
+    ["join toe cinnamon airport they consider pizza can vital siege heavy skill cactus fluid trap green skull remove youth broken shield answer more hunt", 13922388498226213155371012530038012749167739832007217988512442667701646183887739],
+    "# GA",
+    ["relief choose gasp fabric east wolf reason mixture pilot innocent kind misery load energy comfort access exhaust visual sock cricket forum burst useful argue", 20989594528101857236137616937229361054821802270038297348867919511213575597979740],
+    "# Zero",
+    ["abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon", 0],
+    ["zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo", 5444517870735015415413993718908291383295]
+  ],
+  "mnemonics_ita": [
+    "# https://iancoleman.github.io/bip39/",
+    "# 12",
+    "# 24",
+    ["malto tavolata cefalo alabarda svenuto cometa poroso brindare vantaggio sdebitare insieme sentire branca furore titolo impeto serata rilevato zotico bifido sciroppo ambito ologramma laringe", 13922388498226213155371012530038012749167739832007217988512442667701646183887739]
+  ]
 }
