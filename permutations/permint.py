@@ -2,6 +2,11 @@
 # coding=utf-8
 
 
+def fact(x):
+    """Factorial"""
+    return x * fact(x - 1) if x else 1
+
+
 def permutation_to_variable_positions(perm):
     """Position of an element counting only the available positions"""
     cpy = perm[:]
@@ -49,6 +54,10 @@ def variable_to_absolute_positions(var):
 
 def integer_to_permutation(integer, n):
     """Integer (0÷n-1) to permutation"""
+    if integer >= fact(n):
+        raise ValueError('integer %d is too big to be represented'
+                         ' as permutation of %d elements. fact(n)'
+                         ' = %d' % (integer, n, fact(n)))
     var_pos = list(integer_to_variable_positions(integer, n))
     var_pos.append(0)
     return variable_to_absolute_positions(var_pos)
