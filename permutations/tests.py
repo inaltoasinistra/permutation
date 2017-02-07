@@ -190,9 +190,10 @@ class CardsPermutationIntegerTest(TestCase):
         split = [y[2] for y in ordering.load_ordering('French')['ordering']]
         self.assertEqual(decode('French', 'Italian', integer), split[::-1])
 
-        # FIXME
-        # split = [y[0] for y in ordering.load_ordering('test')['ordering']]
-        # self.assertEqual(decode('test', 'test', integer), split[::-1])
+        number = len(ordering.load_ordering('test')['ordering'])
+        integer = permint.fact(number) - 1
+        split = [y[0] for y in ordering.load_ordering('test')['ordering']]
+        self.assertEqual(decode('test', 'test', integer), split[::-1])
 
     def test_back_and_forth(self):
         """Check both directions. Cards -> integer -> cards"""
