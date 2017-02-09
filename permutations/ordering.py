@@ -66,9 +66,15 @@ def decode(ordering_id, description, integer):
     permutation = integer_to_permutation(integer, ordering_len)
     return permutation_to_names(permutation, ordering_id, description)
 
+
+def get_ordering_length(ordering_id):
+    """Return the number of elements"""
+    return len(load_ordering(ordering_id)['ordering'])
+
 __all__ = [
     "encode",
     "decode",
+    "get_ordering_length",
 ]
 
 if __name__ == "__main__":

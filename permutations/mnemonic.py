@@ -3,7 +3,7 @@ Remove the checksum if possible.
 Must support Electrum, Mycelium (bip44 wallet) and GreenAddress"""
 import os
 
-WORDS_NUMBER = (12, 15, 18, 21, 24)
+WORDS_NUMBER = (3, 6, 9, 12, 15, 18, 21, 24)
 BASE = 2048
 
 

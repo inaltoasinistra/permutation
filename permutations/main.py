@@ -14,16 +14,38 @@ e.g. tragedia malinteso attorno lacuna invece michele produrre vispo
 """
 import sys
 import argparse
-from ordering import encode, decode
+from math import log2, floor
+from getpass import getpass
+from ordering import encode, decode, get_ordering_length
 from mnemonic import mnemonic_to_integer, integer_to_mnemonic
+from encryption import crypt
+from utils import integer_to_bytes, bytes_to_integer
+
+
+fact = lambda y: y * fact(y - 1) if y else 1
+
+
+def crypt_data(integer, args):
+    """Do encrypt operations"""
+    if not args.encryption:
+        return integer
+    mode = args.mode
+    password = getpass('Insert the password:')
+
+    length = int(floor(log2(fact(get_ordering_length(args.ordering))) / 8))
+    if mode == 'encode':
+        length -= 1
+    data = integer_to_bytes(integer, length)
+    data = crypt(data, password, mode == 'encode', mode == 'decode')
+    integer = bytes_to_integer(data)
+
+    return integer
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('mode', type=str,
                         help='encode or decode')
-    # parser.add_argument('integers', metavar='N', type=int, nargs='+',
-    #                     help='an integer for the accumulator')
     parser.add_argument('--ordering', dest='ordering', type=str,
                         default='French',
                         help='objects of the permutation')
@@ -33,16 +55,21 @@ def main():
     parser.add_argument('--language', dest='language', type=str,
                         default='english',
                         help='~ of the seed wordlist')
+    parser.add_argument('--encryption', dest='encryption',
+                        action='store_true',
+                        help='encrypt data')
 
     args = parser.parse_args()
 
     if args.mode == 'encode':
         seed = input('BIP39 seed: ')
         integer = mnemonic_to_integer(seed.split())
+        integer = crypt_data(integer, args)
         print(' '.join(decode(args.ordering, args.labels, integer)))
     elif args.mode == 'decode':
         perm = input('Cards permutation: ')
         integer = encode(perm.split())
+        integer = crypt_data(integer, args)
         print(' '.join(integer_to_mnemonic(integer, args.language)))
     else:
         print(__doc__)
