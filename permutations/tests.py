@@ -9,6 +9,7 @@ from ordering import *
 import permint
 from mnemonic import *
 import mnemonic
+from encryption import *
 
 
 def get_test_data():
@@ -275,6 +276,33 @@ class MnemonicTest(TestCase):
 
         with self.assertRaises(ValueError):
             mnemonic_to_integer(['boring', 'drum'])
+
+
+class EncryptionTest(TestCase):
+    """Test encryption and decryption"""
+
+    def check(self, data, password):
+        """Check the condition"""
+        ctext = crypt(data, password)
+        self.assertEqual(crypt(ctext, password), data)
+        self.assertEqual(len(data), len(ctext))
+
+    def test_back_and_forth(self):
+        """Encrypt end decrypt"""
+        password = 'password'
+        data = b'\x22' * 64
+        self.check(data, password)
+        password = '50:passw0rd'
+        data = bytes([random.getrandbits(8) for _ in range(19)])
+        self.check(data, password)
+        data = bytes([random.getrandbits(8) for _ in range(28)])
+        self.check(data, password)
+        data = bytes(u'ß', 'utf-8')
+        self.check(data, password)
+        data = b'\x22' * 100
+        with self.assertRaises(ValueError):
+            self.check(data, password)
+
 
 if __name__ == "__main__":
     main()
