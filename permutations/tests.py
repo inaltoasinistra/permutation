@@ -10,6 +10,7 @@ import permint
 from mnemonic import *
 import mnemonic
 from encryption import *
+from utils import *
 
 
 def get_test_data():
@@ -314,6 +315,38 @@ class EncryptionTest(TestCase):
         with self.assertRaises(ValueError):
             crypt(b'\x0a123', password, check_header=True)
 
+
+class IntegerBytesConversionTest(TestCase):
+    """ Test utils functions """
+
+    def check_int(self, integer):
+        """back and forth"""
+        data = integer_to_bytes(integer, 4)
+        self.assertEqual(integer, bytes_to_integer(data))
+
+    def check_bytes(self, data):
+        """back and forth"""
+        length = len(data)
+        integer = bytes_to_integer(data)
+        self.assertEqual(data, integer_to_bytes(integer, length))
+
+    def test_back_and_forth(self):
+        """Test conversions"""
+        self.check_int(1000)
+        self.check_int(100000)
+        self.check_int(10000000)
+
+        self.check_bytes(b'1234567890')
+        self.check_bytes(b'H' * 100)
+
+    def test_conversion(self):
+        """Test fixed values"""
+        self.assertEqual(1, bytes_to_integer(b'\x01'))
+        self.assertEqual(0x122233, bytes_to_integer(b'\x12\x22\x33'))
+
+        self.assertEqual(b'\x00', integer_to_bytes(0, 1))
+        self.assertEqual(
+            b'\x00\x11\x22\x33\x44', integer_to_bytes(0x11223344, 5))
 
 if __name__ == "__main__":
     main()
