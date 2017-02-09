@@ -287,21 +287,32 @@ class EncryptionTest(TestCase):
         self.assertEqual(crypt(ctext, password), data)
         self.assertEqual(len(data), len(ctext))
 
+        # header
+        ctext = crypt(data, password, add_header=True)
+        self.assertEqual(crypt(ctext, password, check_header=True), data)
+        self.assertEqual(len(data), len(ctext) - 1)
+
     def test_back_and_forth(self):
         """Encrypt end decrypt"""
         password = 'password'
-        data = b'\x22' * 64
+        data = b'\x22' * 63
         self.check(data, password)
         password = '50:passw0rd'
         data = bytes([random.getrandbits(8) for _ in range(19)])
         self.check(data, password)
+        data = bytes([random.getrandbits(8) for _ in range(18)])
+        self.check(data, password)
         data = bytes([random.getrandbits(8) for _ in range(28)])
+        self.check(data, password)
+        data = bytes([random.getrandbits(8) for _ in range(27)])
         self.check(data, password)
         data = bytes(u'ß', 'utf-8')
         self.check(data, password)
         data = b'\x22' * 100
         with self.assertRaises(ValueError):
             self.check(data, password)
+        with self.assertRaises(ValueError):
+            crypt(b'\x0a123', password, check_header=True)
 
 
 if __name__ == "__main__":
