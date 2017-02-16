@@ -15,9 +15,16 @@ from utils import *
 
 def get_test_data():
     """Read data/tests.json"""
-    path = os.path.join(os.path.dirname(sys.argv[0]), 'data', 'tests.json')
-    with open(path, 'rt') as f:
-        return json.load(f)
+    def f(path):
+        """Read json"""
+        with open(path, 'rt') as f:
+            return json.load(f)
+    try:
+        path = os.path.join(os.path.dirname(sys.argv[0]), 'data', 'tests.json')
+        return f(path)
+    except FileNotFoundError:
+        path = os.path.join('data', 'tests.json')
+        return f(path)
 
 
 class Tests(TestCase):
