@@ -27,10 +27,15 @@ fact = lambda y: y * fact(y - 1) if y else 1
 
 def crypt_data(integer, args):
     """Do encrypt operations"""
-    if not args.encryption:
-        return integer
     mode = args.mode
-    password = getpass('Insert the password:')
+    password = None
+    while True:
+        password = getpass('Insert the password: ')
+        confirm = getpass('Confirm the password: ')
+        if password != confirm:
+            print('Retry')
+        else:
+            break
 
     length = int(floor(log2(fact(get_ordering_length(args.ordering))) / 8))
     if mode == 'encode':
@@ -55,9 +60,6 @@ def main():
     parser.add_argument('--language', dest='language', type=str,
                         default='english',
                         help='~ of the seed wordlist')
-    parser.add_argument('--encryption', dest='encryption',
-                        action='store_true',
-                        help='encrypt data')
 
     args = parser.parse_args()
 
