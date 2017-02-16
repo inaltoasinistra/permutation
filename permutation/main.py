@@ -22,12 +22,15 @@ from encryption import crypt
 from utils import integer_to_bytes, bytes_to_integer
 
 
-fact = lambda y: y * fact(y - 1) if y else 1
+def fact(y):
+    """Factorial"""
+    if y:
+        return y * fact(y - 1)
+    return 1
 
 
-def crypt_data(integer, args):
-    """Do encrypt operations"""
-    mode = args.mode
+def get_passwd():
+    """Wrap getpass"""
     password = None
     while True:
         password = getpass('Insert the password: ')
@@ -36,6 +39,13 @@ def crypt_data(integer, args):
             print('Retry')
         else:
             break
+    return password
+
+    
+def crypt_data(integer, args):
+    """Do encrypt operations"""
+    mode = args.mode
+    password = get_passwd()
 
     length = int(floor(log2(fact(get_ordering_length(args.ordering))) / 8))
     if mode == 'encode':
