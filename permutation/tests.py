@@ -289,6 +289,8 @@ class MnemonicTest(TestCase):
 class EncryptionTest(TestCase):
     """Test encryption and decryption"""
 
+    HEADER_LENGTH = 1
+
     def check(self, data, password):
         """Check the condition"""
         ctext = crypt(data, password)
@@ -298,12 +300,12 @@ class EncryptionTest(TestCase):
         # header
         ctext = crypt(data, password, add_header=True)
         self.assertEqual(crypt(ctext, password, check_header=True), data)
-        self.assertEqual(len(data), len(ctext) - 1)
+        self.assertEqual(len(data), len(ctext) - self.HEADER_LENGTH)
 
     def test_back_and_forth(self):
         """Encrypt end decrypt"""
         password = 'password'
-        data = b'\x22' * 63
+        data = b'\x22' * (64 - self.HEADER_LENGTH)
         self.check(data, password)
         password = '50:passw0rd'
         data = bytes([random.getrandbits(8) for _ in range(19)])
