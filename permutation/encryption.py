@@ -27,7 +27,7 @@ def get_version(first_byte):
 
 
 def add_head(data):
-    return bytes([VERSION | os.urandom(1)[0] & 0xf0]) + data
+    return bytes([VERSION]) + data
 
 
 def check_head(data):
