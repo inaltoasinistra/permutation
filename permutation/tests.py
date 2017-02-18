@@ -86,7 +86,7 @@ class Tests(PermutationTestCase):
 
 
 class ProbabilisticTest(PermutationTestCase):
-    """Generate random sequnces and check mapping"""
+    """Generate random sequences and check mapping"""
 
     def get_shuffled(self, number):
         """Get number shuffled elements"""
@@ -94,7 +94,7 @@ class ProbabilisticTest(PermutationTestCase):
         random.shuffle(elements)
         return elements
 
-    def test_random(self):
+    def test_sequances(self):
         """Random generation of permutations"""
         tries = 20
         number = 100
@@ -103,6 +103,16 @@ class ProbabilisticTest(PermutationTestCase):
             integer = permutation_to_integer(elements)
             permutation = integer_to_permutation(integer, number)
             self.assertPermutation(elements, permutation)
+
+    def test_integers(self):
+        """Random generation of integers"""
+        tries = 20
+        number = 100
+        for _ in range(tries):
+            integer = random.randint(0, mapping.fact(number) // 2 - 1)
+            perm = integer_to_permutation(integer, number)
+            check = permutation_to_integer(perm)
+            self.assertEqual(integer, check)
 
 
 class OrderingTest(PermutationTestCase):
