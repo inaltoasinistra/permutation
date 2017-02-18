@@ -27,7 +27,17 @@ def get_test_data():
         return f(path)
 
 
-class Tests(TestCase):
+class PermutationTestCase(TestCase):
+    """
+    Add a test to check valid permutation
+    """
+
+    def assertPermutation(self, test, valid):
+        """test in (valid, reversed(valid)"""
+        self.assertIn(test, (valid, list(reversed(valid))))
+
+
+class Tests(PermutationTestCase):
     """General test"""
 
     def test_permutation_to_variable_positions(self):
@@ -40,9 +50,15 @@ class Tests(TestCase):
 
     def test_permutation_to_integer(self):
         """Test perm_to_int"""
-        self.assertEqual(permutation_to_integer([0]), 0)
-        self.assertEqual(permutation_to_integer([0, 1, 2, 3, 4, 5]), 0)
-        self.assertEqual(permutation_to_integer([2, 0, 4, 1, 3]), 37)
+        def reverse(perm):
+            return list(reversed(perm))
+
+        perm = [0, 1, 2, 3, 4, 5]
+        self.assertEqual(permutation_to_integer(perm), 0)
+        self.assertEqual(permutation_to_integer(reverse(perm)), 0)
+        perm = [2, 0, 4, 1, 3]
+        self.assertEqual(permutation_to_integer(perm), 37)
+        self.assertEqual(permutation_to_integer(reverse(perm)), 37)
 
     def test_integer_to_variable_positions(self):
         """Test integer_to_variable_positions"""
@@ -59,12 +75,17 @@ class Tests(TestCase):
 
     def test_integer_to_permutation(self):
         """Test perm_to_int"""
-        self.assertEqual(integer_to_permutation(0, 5), [0, 1, 2, 3, 4])
-        self.assertEqual(integer_to_permutation(119, 5), [4, 3, 2, 1, 0])
-        self.assertEqual(integer_to_permutation(37, 5), [2, 0, 4, 1, 3])
+        def perms(perm):
+            """Return the valid orderings of the permutation"""
+            return perm, list(reversed(perm))
+
+        self.assertPermutation(integer_to_permutation(0, 5), [0, 1, 2, 3, 4])
+        self.assertPermutation(integer_to_permutation(37, 5), [2, 0, 4, 1, 3])
+        with self.assertRaises(ValueError):
+            integer_to_permutation(119, 5)
 
 
-class ProbabilisticTest(TestCase):
+class ProbabilisticTest(PermutationTestCase):
     """Generate random sequnces and check mapping"""
 
     def get_shuffled(self, number):
@@ -81,10 +102,10 @@ class ProbabilisticTest(TestCase):
             elements = self.get_shuffled(number)
             integer = permutation_to_integer(elements)
             permutation = integer_to_permutation(integer, number)
-            self.assertEqual(elements, permutation)
+            self.assertPermutation(elements, permutation)
 
 
-class OrderingTest(TestCase):
+class OrderingTest(PermutationTestCase):
     """Check properties of ordering data"""
 
     def test_uniqueness(self):
@@ -98,7 +119,7 @@ class OrderingTest(TestCase):
                     self.assertEqual(len(set(column)), len(current))
 
 
-class CardsPermutationTest(TestCase):
+class CardsPermutationTest(PermutationTestCase):
     """Check the conversion cards permutation <-> integer"""
     DATA = get_test_data()
 
@@ -144,7 +165,7 @@ class CardsPermutationTest(TestCase):
         self.assertEqual(split, names)
 
 
-class CardsPermutationIntegerTest(TestCase):
+class CardsPermutationIntegerTest(PermutationTestCase):
     """Cards to integer back and forth"""
     DATA = get_test_data()
 
@@ -160,7 +181,7 @@ class CardsPermutationIntegerTest(TestCase):
         cards = [y[0] for y in ordering.load_ordering('French')['ordering']]
         self.assertEqual(encode(cards), 0)
 
-        self.assertEqual(encode(list(reversed(cards))), mapping.fact(52) - 1)
+        self.assertEqual(encode(list(reversed(cards))), 0)
 
         cards = [y[2] for y in ordering.load_ordering('French')['ordering']]
         self.assertEqual(encode(cards), 0)
@@ -171,38 +192,22 @@ class CardsPermutationIntegerTest(TestCase):
     def test_from_integer(self):
         """Integer to cards"""
         cards = decode('French', 'Symbols', self.DATA['cards1_encoded'])
-        self.assertEqual(cards, self.DATA['cards1'].split())
+        self.assertPermutation(cards, self.DATA['cards1'].split())
 
         cards = decode('French', 'Italian', self.DATA['cards2_encoded'])
         split = [y.strip() for y in self.DATA['cards2'].split(',')]
-        self.assertEqual(cards, split)
+        self.assertPermutation(cards, split)
 
         # Decode 0
 
         split = [y[0] for y in ordering.load_ordering('French')['ordering']]
-        self.assertEqual(decode('French', 'Symbols', 0), split)
+        self.assertPermutation(decode('French', 'Symbols', 0), split)
 
         split = [y[2] for y in ordering.load_ordering('French')['ordering']]
-        self.assertEqual(decode('French', 'Italian', 0), split)
+        self.assertPermutation(decode('French', 'Italian', 0), split)
 
         split = [y[0] for y in ordering.load_ordering('test')['ordering']]
-        self.assertEqual(decode('test', 'test', 0), split)
-
-        # Decode fact(n) - 1
-
-        number = len(ordering.load_ordering('French')['ordering'])
-        integer = mapping.fact(number) - 1
-
-        split = [y[0] for y in ordering.load_ordering('French')['ordering']]
-        self.assertEqual(decode('French', 'Symbols', integer), split[::-1])
-
-        split = [y[2] for y in ordering.load_ordering('French')['ordering']]
-        self.assertEqual(decode('French', 'Italian', integer), split[::-1])
-
-        number = len(ordering.load_ordering('test')['ordering'])
-        integer = mapping.fact(number) - 1
-        split = [y[0] for y in ordering.load_ordering('test')['ordering']]
-        self.assertEqual(decode('test', 'test', integer), split[::-1])
+        self.assertPermutation(decode('test', 'test', 0), split)
 
     def test_back_and_forth(self):
         """Check both directions. Cards -> integer -> cards"""
@@ -210,7 +215,7 @@ class CardsPermutationIntegerTest(TestCase):
             """Local operations"""
             integer = encode(cards_in)
             cards_out = decode(ordering_id, description, integer)
-            self.assertEqual(cards_in, cards_out)
+            self.assertPermutation(cards_in, cards_out)
 
         split = [y.strip() for y in self.DATA['cards1'].split(' ')]
         for _ in range(100):
@@ -228,14 +233,14 @@ class CardsPermutationIntegerTest(TestCase):
         description = 'test'
         permutations = set()
         number = len(ordering.load_ordering(ordering_id)['ordering'])
-        for integer in range(mapping.fact(number)):
+        for integer in range(mapping.fact(number) // 2):
             perm = tuple(decode(ordering_id, description, integer))
             self.assertNotIn(perm, permutations)
             permutations.add(perm)
-        self.assertEqual(len(permutations), mapping.fact(number))
+        self.assertEqual(len(permutations), mapping.fact(number) // 2)
 
 
-class MnemonicTest(TestCase):
+class MnemonicTest(PermutationTestCase):
     """Test consistency of mnemonic conversion"""
     DATA = get_test_data()
     eng = [y for y in DATA['mnemonics_eng'] if y[0] != '#']
@@ -286,7 +291,7 @@ class MnemonicTest(TestCase):
             mnemonic_to_integer(['boring', 'drum'])
 
 
-class EncryptionTest(TestCase):
+class EncryptionTest(PermutationTestCase):
     """Test encryption and decryption"""
 
     HEADER_LENGTH = 1
@@ -325,7 +330,7 @@ class EncryptionTest(TestCase):
             crypt(b'\x0a123', password, check_header=True)
 
 
-class IntegerBytesConversionTest(TestCase):
+class IntegerBytesConversionTest(PermutationTestCase):
     """ Test utils functions """
 
     def check_int(self, integer):
