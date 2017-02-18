@@ -5,16 +5,21 @@ import sys
 from mapping import *
 
 
-def load_ordering(key, directory=None):
+def load_ordering(key):
     """Load static ordering information"""
-    if directory is None:
-        path = os.path.join(
-            os.path.dirname(sys.argv[0]), 'data', 'ordering.json')
-    else:
-        path = os.path.join(
-            os.path.dirname(directory), 'data', 'ordering.json')
-    with open(path, 'rt') as f:
-        obj = json.load(f)
+
+    def f(path):
+        """Read json"""
+        with open(path, 'rt') as f:
+            return json.load(f)
+    try:
+        path = os.path.join(os.path.dirname(
+            sys.argv[0]), 'data', 'ordering.json')
+        obj = f(path)
+    except FileNotFoundError:
+        path = os.path.join('data', 'ordering.json')
+        obj = f(path)
+
     if key is not None:
         return obj[key]
     return obj
