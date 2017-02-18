@@ -2,7 +2,7 @@
 import json
 import os
 import sys
-from permint import *
+from mapping import *
 
 
 def load_ordering(key, directory=None):

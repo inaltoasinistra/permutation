@@ -3,10 +3,10 @@ import random
 import os
 import sys
 import json
-from permint import *
+from mapping import *
 import ordering
 from ordering import *
-import permint
+import mapping
 from mnemonic import *
 import mnemonic
 from encryption import *
@@ -32,7 +32,7 @@ class Tests(TestCase):
 
     def test_permutation_to_variable_positions(self):
         """Test perm_to_positions"""
-        f = permint.permutation_to_variable_positions
+        f = mapping.permutation_to_variable_positions
         self.assertEqual(f([0]), [])
         self.assertEqual(f([0, 1]), [0])
         self.assertEqual(f([3, 2, 1, 0]), [3, 2, 1])
@@ -46,14 +46,14 @@ class Tests(TestCase):
 
     def test_integer_to_variable_positions(self):
         """Test integer_to_variable_positions"""
-        f = lambda *args: list(permint.integer_to_variable_positions(*args))
+        f = lambda *args: list(mapping.integer_to_variable_positions(*args))
         self.assertEqual(f(0, 5), [0, 0, 0, 0])
         self.assertEqual(f(119, 5),[4, 3, 2, 1])
         self.assertEqual(f(37, 5), [1, 2, 0, 1])
 
     def test_variable_to_absolute_positions(self):
         """Test variable_to_absolute_positions"""
-        f = permint.variable_to_absolute_positions
+        f = mapping.variable_to_absolute_positions
         self.assertEqual(f([0, 0, 0, 0, 0]), [0, 1, 2, 3, 4])
         self.assertEqual(f([1, 2, 0, 1, 0]), [2, 0, 4, 1, 3])
 
@@ -160,7 +160,7 @@ class CardsPermutationIntegerTest(TestCase):
         cards = [y[0] for y in ordering.load_ordering('French')['ordering']]
         self.assertEqual(encode(cards), 0)
 
-        self.assertEqual(encode(list(reversed(cards))), permint.fact(52) - 1)
+        self.assertEqual(encode(list(reversed(cards))), mapping.fact(52) - 1)
 
         cards = [y[2] for y in ordering.load_ordering('French')['ordering']]
         self.assertEqual(encode(cards), 0)
@@ -191,7 +191,7 @@ class CardsPermutationIntegerTest(TestCase):
         # Decode fact(n) - 1
 
         number = len(ordering.load_ordering('French')['ordering'])
-        integer = permint.fact(number) - 1
+        integer = mapping.fact(number) - 1
 
         split = [y[0] for y in ordering.load_ordering('French')['ordering']]
         self.assertEqual(decode('French', 'Symbols', integer), split[::-1])
@@ -200,7 +200,7 @@ class CardsPermutationIntegerTest(TestCase):
         self.assertEqual(decode('French', 'Italian', integer), split[::-1])
 
         number = len(ordering.load_ordering('test')['ordering'])
-        integer = permint.fact(number) - 1
+        integer = mapping.fact(number) - 1
         split = [y[0] for y in ordering.load_ordering('test')['ordering']]
         self.assertEqual(decode('test', 'test', integer), split[::-1])
 
@@ -228,11 +228,11 @@ class CardsPermutationIntegerTest(TestCase):
         description = 'test'
         permutations = set()
         number = len(ordering.load_ordering(ordering_id)['ordering'])
-        for integer in range(permint.fact(number)):
+        for integer in range(mapping.fact(number)):
             perm = tuple(decode(ordering_id, description, integer))
             self.assertNotIn(perm, permutations)
             permutations.add(perm)
-        self.assertEqual(len(permutations), permint.fact(number))
+        self.assertEqual(len(permutations), mapping.fact(number))
 
 
 class MnemonicTest(TestCase):
