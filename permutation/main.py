@@ -20,13 +20,7 @@ from ordering import encode, decode, get_ordering_length
 from mnemonic import mnemonic_to_integer, integer_to_mnemonic
 from encryption import crypt
 from utils import integer_to_bytes, bytes_to_integer
-
-
-def fact(y):
-    """Factorial"""
-    if y:
-        return y * fact(y - 1)
-    return 1
+from mapping import fact
 
 
 def get_passwd():
