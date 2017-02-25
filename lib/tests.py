@@ -3,14 +3,12 @@ import random
 import os
 import sys
 import json
-from mapping import *
-import ordering
-from ordering import *
-import mapping
-from mnemonic import *
-import mnemonic
-from encryption import *
-from utils import *
+from lib import ordering, mapping, mnemonic
+from lib.mapping import *
+from lib.ordering import *
+from lib.mnemonic import *
+from lib.encryption import *
+from lib.utils import *
 
 
 def get_test_data():

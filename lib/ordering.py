@@ -2,7 +2,7 @@
 import json
 import os
 import sys
-from mapping import *
+from lib.mapping import *
 
 
 def load_ordering(key):
