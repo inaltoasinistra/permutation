@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 u"""
 usage:
-    main.py encode
-    main.py decode
-    main.py help
+    permutation encode
+    permutation decode
+    permutation help
 
 e.g. tragedia malinteso attorno lacuna invece michele produrre vispo
      brillante buio valgo umano
