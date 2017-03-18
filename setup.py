@@ -5,9 +5,16 @@ here = os.path.abspath(os.path.dirname(__file__))
 with open(os.path.join(here, 'README.md')) as f:
     README = f.read()
 
+version = 'UNDEFINED'
+with open('lib/__init__.py', 'r') as f:
+    for line in f:
+        if line.startswith('__version__'):
+            version = line.strip().split('= ')[1].strip("'")
+            break
+
 setup(
     name='permutation',
-    version='0',
+    version=version,
     packages=find_packages(),
     # url='private',
     license='MIT Licence',
