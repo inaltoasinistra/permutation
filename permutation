@@ -56,11 +56,8 @@ def main():
     parser.add_argument('mode', type=str,
                         help='encode or decode')
     parser.add_argument('--ordering', dest='ordering', type=str,
-                        default='French',
+                        default='french-symbols',
                         help='objects of the permutation')
-    parser.add_argument('--labels', dest='labels', type=str,
-                        default='Symbols',
-                        help='~ of objects')
     parser.add_argument('--language', dest='language', type=str,
                         default='english',
                         help='~ of the seed wordlist')
@@ -71,7 +68,7 @@ def main():
         seed = input('BIP39 seed: ')
         integer = mnemonic_to_integer(seed.split())
         integer = crypt_data(integer, args)
-        print(' '.join(decode(args.ordering, args.labels, integer)))
+        print(' '.join(decode(args.ordering, integer)))
     elif args.mode == 'decode':
         perm = input('Cards permutation: ')
         integer = encode(perm.split())
