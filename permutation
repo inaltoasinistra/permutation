@@ -74,7 +74,7 @@ def main():
         print(args.sep.join(decode(args.ordering, integer)))
     elif args.mode == 'decode':
         perm = input('Cards permutation: ')
-        integer = encode(perm.split(args.sep))
+        integer = encode([word.strip() for word in perm.split(args.sep)])
         integer = crypt_data(integer, args)
         print(' '.join(integer_to_mnemonic(integer, args.language)))
     else:
