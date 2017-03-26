@@ -31,9 +31,9 @@ setup(
     scripts=['permutation'],
     package_data={
         'permutation': [
-            'data/ordering.json',
-            'data/tests.json',
-            'data/wordlist/*.txt'
+            'data/ordering/*.txt',
+            'data/wordlist/*.txt',
+            'data/tests.json'
         ]
     },
 )
