@@ -2,7 +2,7 @@
 import json
 import os
 import sys
-from lib.mapping import *
+from permutation.mapping import *
 
 
 def get_abs_path(relative):

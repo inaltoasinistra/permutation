@@ -1,4 +1,4 @@
 """permutation library"""
-from lib.ordering import *
+from permutation.ordering import *
 
 __version__ = '0'

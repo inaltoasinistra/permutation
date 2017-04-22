@@ -16,11 +16,11 @@ import sys
 import argparse
 from math import log2, floor
 from getpass import getpass
-from lib.ordering import encode, decode, get_ordering_length
-from lib.mnemonic import mnemonic_to_integer, integer_to_mnemonic
-from lib.encryption import crypt
-from lib.utils import integer_to_bytes, bytes_to_integer
-from lib.mapping import fact
+from permutation.ordering import encode, decode, get_ordering_length
+from permutation.mnemonic import mnemonic_to_integer, integer_to_mnemonic
+from permutation.encryption import crypt
+from permutation.utils import integer_to_bytes, bytes_to_integer
+from permutation.mapping import fact
 
 
 def get_passwd():
