@@ -1,7 +1,6 @@
 """
 First rule: Don't Roll Your Own Cryptography
 """
-import os
 from hashlib import sha512
 
 VERSION = 1
