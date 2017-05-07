@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-u"""
+"""
 usage:
-    permutation encode
-    permutation decode
-    permutation help
+    permutation encode //
+    permutation decode //
+    permutation help //
 
 e.g. tragedia malinteso attorno lacuna invece michele produrre vispo
      brillante buio valgo umano
@@ -18,7 +17,7 @@ from math import log2, floor
 from getpass import getpass
 from permutation.ordering import encode, decode, get_ordering_length
 from permutation.mnemonic import mnemonic_to_integer, integer_to_mnemonic
-from permutation.encryption import crypt
+from permutation.encryption import crypt, decrypt
 from permutation.utils import integer_to_bytes, bytes_to_integer
 from permutation.mapping import fact
 
@@ -41,11 +40,20 @@ def crypt_data(integer, args):
     mode = args.mode
     password = get_passwd()
 
+    # available length
     length = int(floor(log2(fact(get_ordering_length(args.ordering))) / 8))
     if mode == 'encode':
-        length -= 1
+        length -= 1  # clear text header
+        length -= length % 4  # Avoid xxtea padding
+        length -= 1  # xxtea header
     data = integer_to_bytes(integer, length)
-    data = crypt(data, password, mode == 'encode', mode == 'decode')
+    if mode == 'encode':
+        data = crypt(data, password, True)
+    elif mode == 'decode':
+        # Remove padding
+        if len(data) % 4:
+            data = data[:-(len(data) % 4)]
+        data = decrypt(data, password, True)
     integer = bytes_to_integer(data)
 
     return integer

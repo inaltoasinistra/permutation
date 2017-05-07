@@ -301,20 +301,16 @@ class EncryptionTest(PermutationTestCase):
     def check(self, data, password):
         """Check the condition"""
         ctext = crypt(data, password)
-        self.assertEqual(crypt(ctext, password), data)
-        self.assertEqual(len(data), len(ctext))
+        clear = decrypt(ctext, password)
+        self.assertEqual(clear, data, '%d %d' % (len(clear), len(data)))
 
         # header
-        ctext = crypt(data, password, add_header=True)
-        self.assertEqual(crypt(ctext, password, check_header=True), data)
-        self.assertEqual(len(data), len(ctext) - self.HEADER_LENGTH)
+        ctext = crypt(data, password, True)
+        self.assertEqual(decrypt(ctext, password, True), data)
 
     def test_back_and_forth(self):
         """Encrypt end decrypt"""
-        password = 'password'
-        data = b'\x22' * (64 - self.HEADER_LENGTH)
-        self.check(data, password)
-        password = '50:passw0rd'
+        password = 'passw0rd:14'
         data = bytes([random.getrandbits(8) for _ in range(19)])
         self.check(data, password)
         data = bytes([random.getrandbits(8) for _ in range(18)])
@@ -325,11 +321,6 @@ class EncryptionTest(PermutationTestCase):
         self.check(data, password)
         data = bytes(u'ß', 'utf-8')
         self.check(data, password)
-        data = b'\x22' * 100
-        with self.assertRaises(ValueError):
-            self.check(data, password)
-        with self.assertRaises(ValueError):
-            crypt(b'\x0a123', password, check_header=True)
 
 
 class IntegerBytesConversionTest(PermutationTestCase):

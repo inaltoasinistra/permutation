@@ -1,32 +1,37 @@
 """
 First rule: Don't Roll Your Own Cryptography
 """
-from hashlib import sha512
+import os
+import scrypt
+import xxtea
 
 VERSION = 1
+assert VERSION < 8
 
 
 def get_key(password):
     """ utf-8 password to 64 byte of key """
+
     try:
-        cycles = int(password.split(':')[0])
+        # 2**14 = 16384
+        cycles = min(int(password.split(':')[-1]), 14)
         if cycles <= 0:
             raise ValueError
     except ValueError:
-        cycles = 1000000
-    key = bytes(password, 'utf-8')
-    for _ in range(cycles):
-        key = sha512(key).digest()
-    return key
+        cycles = 21
+    return scrypt.hash(password, 'permutation', N=2**cycles, buflen=16)
 
 
 def get_version(first_byte):
     """Get version as integer"""
-    return first_byte & 0xf
+    return first_byte & 0x7
 
 
 def add_head(data):
-    return bytes([VERSION]) + data
+    """5 random bits, 3 bit version
+    random bits are needed to produce different ciphertexts with the same
+    (data, password) couple"""
+    return bytes([os.urandom(1)[0] & 0xf8 | VERSION]) + data
 
 
 def check_head(data):
@@ -36,24 +41,26 @@ def check_head(data):
     raise ValueError('Version not supported')
 
 
-def crypt(data, password, add_header=False, check_header=False):
-    """Return encrypted or decrypted data"""
-    assert not add_header or not check_header, 'You cannot set both'
+def crypt(data, password, add_header=False):
+    """Return encrypted data"""
     if add_header:
         data = add_head(data)
 
-    key = get_key(password)[:len(data)]
-    if len(data) != len(key):
-        raise ValueError('Data length is greater than 64 bytes')
-    res = []
-    for d, k in zip(data, key):
-        res.append(d ^ k)
-    data = bytes(res)
+    key = get_key(password)
+    return xxtea.encrypt(data, key)
+
+
+def decrypt(data, password, check_header=False):
+    """Return decrypted data"""
+
+    key = get_key(password)
+    data = xxtea.decrypt(data, key)
+
     if check_header:
         return check_head(data)
     return data
 
-
 __all__ = [
-    'crypt'
+    'crypt',
+    'decrypt',
 ]
