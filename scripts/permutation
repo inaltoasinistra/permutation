@@ -85,9 +85,6 @@ def main():
         integer = encode([word.strip() for word in perm.split(args.sep)])
         integer = crypt_data(integer, args)
         print(' '.join(integer_to_mnemonic(integer, args.language)))
-    else:
-        print(__doc__)
-        sys.exit()
 
 if __name__ == "__main__":
     main()
