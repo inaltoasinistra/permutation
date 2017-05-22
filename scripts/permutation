@@ -34,7 +34,23 @@ def get_passwd():
             break
     return password
 
-    
+
+def encoding_len(max_len):
+    """Compute the len of the clear data
+    Round to multiple of 4
+    Remove header: clear text, xxtea
+    """
+
+    def simulate(l):
+        """Simulate enc. Doc only"""
+        l += 2  # Add header
+        if l % 4 == 0:
+            return max(l, 8)
+        return max((l // 4 + 1) * 4, 8)
+
+    return max_len // 4 * 4 - 2
+
+
 def crypt_data(integer, args):
     """Do encrypt operations"""
     mode = args.mode
@@ -42,13 +58,15 @@ def crypt_data(integer, args):
 
     # available length
     length = int(floor(log2(fact(get_ordering_length(args.ordering))) / 8))
+
+    max_len = length
     if mode == 'encode':
-        length -= 1  # clear text header
-        length -= length % 4  # Avoid xxtea padding
-        length -= 1  # xxtea header
+        length = encoding_len(length)
     data = integer_to_bytes(integer, length)
     if mode == 'encode':
         data = crypt(data, password, True)
+        assert len(data) <= max_len, (
+            'Encrypted data is too long (%d, max %d)' % (len(data), max_len))
     elif mode == 'decode':
         # Remove padding
         if len(data) % 4:
