@@ -24,6 +24,7 @@ Dieci di Quadri
 Fante di Quadri
 Donna di Quadri
 Re di Quadri
+Jolly rosso
 Asso di Fiori
 Due di Fiori
 Tre di Fiori
@@ -50,3 +51,4 @@ Dieci di Picche
 Fante di Picche
 Donna di Picche
 Re di Picche
+Jolly nero
