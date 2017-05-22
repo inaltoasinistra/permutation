@@ -1,4 +1,4 @@
-from unittest import TestCase, main
+from unittest import TestCase, main, skip
 import random
 import os
 import sys
@@ -122,6 +122,7 @@ class OrderingTest(PermutationTestCase):
             self.assertEqual(len(set(labels)), len(labels))
 
 
+@skip
 class CardsPermutationTest(PermutationTestCase):
     """Check the conversion cards permutation <-> integer"""
     DATA = get_test_data()
@@ -168,6 +169,7 @@ class CardsPermutationTest(PermutationTestCase):
         self.assertEqual(split, names)
 
 
+@skip
 class CardsPermutationIntegerTest(PermutationTestCase):
     """Cards to integer back and forth"""
     DATA = get_test_data()
