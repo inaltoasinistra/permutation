@@ -70,4 +70,10 @@ def integer_to_mnemonic(integer, language='english'):
     return words[::-1]
 
 
-__all__ = ['mnemonic_to_integer', 'integer_to_mnemonic']
+def get_languages():
+    """Return the list of available languages"""
+    directory = os.path.join(os.path.dirname(__file__), 'data', 'wordlist')
+    return [y[:-4] for y in os.listdir(directory) if y.endswith('.txt')]
+
+
+__all__ = ['mnemonic_to_integer', 'integer_to_mnemonic', 'get_languages']
