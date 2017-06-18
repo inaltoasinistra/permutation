@@ -11,9 +11,8 @@ e.g. tragedia malinteso attorno lacuna invece michele produrre vispo
      4♣ 8♦ 7♦ 2♣ K♠ Q♠ 7♠ J♦ 9♠ 9♣ A♣ Q♦ 5♦ 10♠ 3♠ K♦ K♣ 10♦ 10♣ 2♠
      9♦ J♠ 8♣ A♠ Q♣ 6♠ J♣ 6♦ 6♣ 7♣ 5♣
 """
-import sys
 import argparse
-from math import log2, floor
+from math import log2
 from getpass import getpass
 from permutation.ordering import encode, decode, get_ordering_length
 from permutation.mnemonic import mnemonic_to_integer, integer_to_mnemonic
@@ -51,9 +50,8 @@ def encoding_len(max_len):
     return max_len // 4 * 4 - 2
 
 
-def crypt_data(integer, mode, ordering):
+def crypt_data(integer, mode, ordering, password):
     """Do encrypt operations"""
-    password = get_passwd()
 
     # available length
     length = int(log2(fact(get_ordering_length(ordering))) // 8)
@@ -89,18 +87,27 @@ def main():
     parser.add_argument('--sep', dest='sep', type=str,
                         default=' ',
                         help='separator of permutation labels')
+    # Unsafe arguments
+    parser.add_argument('--seed-unsafe', dest='seed', type=str,
+                        help='BIP39 seed. *UNSAFE*')
+    parser.add_argument('--password-unsafe', dest='password', type=str,
+                        help='*UNSAFE*')
+    parser.add_argument('--permutation-unsafe', dest='permutation', type=str,
+                        help='*UNSAFE*')
 
     args = parser.parse_args()
 
+    password = args.password or get_passwd()
+
     if args.mode == 'encode':
-        seed = input('BIP39 seed: ')
+        seed = args.seed or input('BIP39 seed: ')
         integer = mnemonic_to_integer(seed.split())
-        integer = crypt_data(integer, args.mode, args.ordering)
+        integer = crypt_data(integer, args.mode, args.ordering, password)
         print(args.sep.join(decode(args.ordering, integer)))
     elif args.mode == 'decode':
-        perm = input('Cards permutation: ')
+        perm = args.permutation or input('Cards permutation: ')
         integer = encode([word.strip() for word in perm.split(args.sep)])
-        integer = crypt_data(integer, args.mode, args.ordering)
+        integer = crypt_data(integer, args.mode, args.ordering, password)
         print(' '.join(integer_to_mnemonic(integer, args.language)))
 
 
