@@ -72,10 +72,16 @@ def get_ordering_length(ordering_key):
     return len(load_ordering(ordering_key))
 
 
+def get_orderings():
+    """Return all supported ordering names"""
+    directory = os.path.join(os.path.dirname(__file__), 'data', 'ordering')
+    return [y[:-4] for y in os.listdir(directory) if y.endswith('.txt')]
+
 __all__ = [
     "encode",
     "decode",
     "get_ordering_length",
+    "get_orderings",
 ]
 
 if __name__ == "__main__":
