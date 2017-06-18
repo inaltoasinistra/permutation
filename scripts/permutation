@@ -51,13 +51,12 @@ def encoding_len(max_len):
     return max_len // 4 * 4 - 2
 
 
-def crypt_data(integer, args):
+def crypt_data(integer, mode, ordering):
     """Do encrypt operations"""
-    mode = args.mode
     password = get_passwd()
 
     # available length
-    length = int(floor(log2(fact(get_ordering_length(args.ordering))) / 8))
+    length = int(log2(fact(get_ordering_length(ordering)) // 8))
 
     max_len = length
     if mode == 'encode':
@@ -96,12 +95,12 @@ def main():
     if args.mode == 'encode':
         seed = input('BIP39 seed: ')
         integer = mnemonic_to_integer(seed.split())
-        integer = crypt_data(integer, args)
+        integer = crypt_data(integer, args.mode, args.ordering)
         print(args.sep.join(decode(args.ordering, integer)))
     elif args.mode == 'decode':
         perm = input('Cards permutation: ')
         integer = encode([word.strip() for word in perm.split(args.sep)])
-        integer = crypt_data(integer, args)
+        integer = crypt_data(integer, args.mode, args.ordering)
         print(' '.join(integer_to_mnemonic(integer, args.language)))
 
 
