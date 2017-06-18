@@ -60,9 +60,13 @@ class GeneralTests(PermutationTestCase):
 
     def test_integer_to_variable_positions(self):
         """Test integer_to_variable_positions"""
-        f = lambda *args: list(mapping.integer_to_variable_positions(*args))
+
+        def f(*args):
+            """Shortcur"""
+            return list(mapping.integer_to_variable_positions(*args))
+
         self.assertEqual(f(0, 5), [0, 0, 0, 0])
-        self.assertEqual(f(119, 5),[4, 3, 2, 1])
+        self.assertEqual(f(119, 5), [4, 3, 2, 1])
         self.assertEqual(f(37, 5), [1, 2, 0, 1])
 
     def test_variable_to_absolute_positions(self):
@@ -132,7 +136,7 @@ class CardsPermutationTest(PermutationTestCase):
 
         def test(cards):
             """local operations"""
-            split = cards.split(',') if ',' in cards else  cards.split()
+            split = cards.split(',') if ',' in cards else cards.split()
             split = [y.strip() for y in split]
             self.assertEqual(len(split), len(set(split)))
             self.assertEqual(len(split), 52)
@@ -356,6 +360,7 @@ class IntegerBytesConversionTest(PermutationTestCase):
         self.assertEqual(b'\x00', integer_to_bytes(0, 1))
         self.assertEqual(
             b'\x00\x11\x22\x33\x44', integer_to_bytes(0x11223344, 5))
+
 
 if __name__ == "__main__":
     main()

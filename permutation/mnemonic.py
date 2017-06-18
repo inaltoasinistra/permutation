@@ -25,6 +25,7 @@ def detect_wordlist(words):
     else:
         raise ValueError('Wordlist not found')
 
+
 def get_wordlist(language):
     """Get the wordlist"""
     directory = os.path.join(os.path.dirname(__file__), 'data', 'wordlist')

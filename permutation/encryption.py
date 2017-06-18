@@ -60,6 +60,7 @@ def decrypt(data, password, check_header=False):
         return check_head(data)
     return data
 
+
 __all__ = [
     'crypt',
     'decrypt',

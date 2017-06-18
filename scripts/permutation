@@ -41,12 +41,12 @@ def encoding_len(max_len):
     Remove header: clear text, xxtea
     """
 
-    def simulate(l):
+    def simulate(length):
         """Simulate enc. Doc only"""
-        l += 2  # Add header
-        if l % 4 == 0:
-            return max(l, 8)
-        return max((l // 4 + 1) * 4, 8)
+        length += 2  # Add header
+        if length % 4 == 0:
+            return max(length, 8)
+        return max((length // 4 + 1) * 4, 8)
 
     return max_len // 4 * 4 - 2
 
@@ -103,6 +103,7 @@ def main():
         integer = encode([word.strip() for word in perm.split(args.sep)])
         integer = crypt_data(integer, args)
         print(' '.join(integer_to_mnemonic(integer, args.language)))
+
 
 if __name__ == "__main__":
     main()

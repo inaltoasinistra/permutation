@@ -71,6 +71,7 @@ def get_ordering_length(ordering_key):
     """Return the number of elements"""
     return len(load_ordering(ordering_key))
 
+
 __all__ = [
     "encode",
     "decode",
