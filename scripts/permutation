@@ -56,7 +56,7 @@ def crypt_data(integer, mode, ordering):
     password = get_passwd()
 
     # available length
-    length = int(log2(fact(get_ordering_length(ordering)) // 8))
+    length = int(log2(fact(get_ordering_length(ordering))) // 8)
 
     max_len = length
     if mode == 'encode':
