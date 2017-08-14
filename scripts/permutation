@@ -117,7 +117,7 @@ def main():
         print('encrypted integer', integer)
         integer = crypt_data(integer, args.mode, args.ordering, password)
         print('decrypted integer', integer)
-        print(' '.join(integer_to_mnemonic(integer, args.language)))
+        print(args.sep.join(integer_to_mnemonic(integer, args.language)))
 
 
 if __name__ == "__main__":
