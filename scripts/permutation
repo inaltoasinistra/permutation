@@ -50,6 +50,10 @@ def encoding_len(max_len):
     return max_len // 4 * 4 - 2
 
 
+def b2x(bb):
+    return '0x' + ''.join(['%02x' % y for y in bb])
+
+
 def crypt_data(integer, mode, ordering, password):
     """Do encrypt operations"""
 
@@ -60,6 +64,7 @@ def crypt_data(integer, mode, ordering, password):
     if mode == 'encode':
         length = encoding_len(length)
     data = integer_to_bytes(integer, length)
+    print('input in bytes', b2x(data), len(data))
     if mode == 'encode':
         data = crypt(data, password, True)
         assert len(data) <= max_len, (
@@ -69,6 +74,7 @@ def crypt_data(integer, mode, ordering, password):
         if len(data) % 4:
             data = data[len(data) % 4:]
         data = decrypt(data, password, True)
+    print('output in bytes', b2x(data), len(data))
     integer = bytes_to_integer(data)
 
     return integer
@@ -103,11 +109,14 @@ def main():
         seed = args.seed or input('BIP39 seed: ')
         integer = mnemonic_to_integer(seed.split())
         integer = crypt_data(integer, args.mode, args.ordering, password)
+        print('encrypted integer', integer)
         print(args.sep.join(decode(args.ordering, integer)))
     elif args.mode == 'decode':
         perm = args.permutation or input('Cards permutation: ')
         integer = encode([word.strip() for word in perm.split(args.sep)])
+        print('encrypted integer', integer)
         integer = crypt_data(integer, args.mode, args.ordering, password)
+        print('decrypted integer', integer)
         print(' '.join(integer_to_mnemonic(integer, args.language)))
 
 
