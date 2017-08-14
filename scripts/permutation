@@ -115,7 +115,9 @@ def main():
 
     if args.mode == 'encode':
         seed = args.seed or input('BIP39 seed: ')
-        integer = mnemonic_to_integer(seed.split())
+        integer = mnemonic_to_integer(seed.split(
+            None if args.sep == ' ' else args.sep))
+        log('decrypted integer', integer)
         integer = crypt_data(integer, args.mode, args.ordering, password)
         log('encrypted integer', integer)
         print(args.sep.join(decode(args.ordering, integer)))
