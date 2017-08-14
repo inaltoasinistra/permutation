@@ -5,10 +5,12 @@ SEEDS="tragedia,malinteso,attorno attorno,lacuna,invece,michele,produrre,vispo t
 
 for seed in $SEEDS
 do
+    echo
+    echo $seed
     enc=$(./scripts/permutation --password-unsafe test:1 --seed-unsafe $seed --sep , encode)
+    echo
     dec=$(./scripts/permutation --password-unsafe test:1 --permutation-unsafe "$enc" --language italian --sep , decode)
     
-    echo $dec
     if [ $seed != $dec ]
     then
 	echo Error $seed
