@@ -67,7 +67,7 @@ def crypt_data(integer, mode, ordering, password):
     elif mode == 'decode':
         # Remove padding
         if len(data) % 4:
-            data = data[:-(len(data) % 4)]
+            data = data[len(data) % 4:]
         data = decrypt(data, password, True)
     integer = bytes_to_integer(data)
 
