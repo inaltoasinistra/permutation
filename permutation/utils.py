@@ -5,6 +5,8 @@ from permutation.ordering import get_ordering_length
 from permutation.encryption import crypt, decrypt
 from permutation.mapping import fact
 
+VERBOSITY = False
+
 
 def integer_to_bytes(integer, length):
     return integer.to_bytes(length, 'big')
@@ -36,7 +38,8 @@ def b2x(bb):
 
 def log(*args):
     """ print to stderr """
-    # print(*args, file=sys.stderr)
+    if VERBOSITY:
+        print(*args, file=sys.stderr)
 
 
 def crypt_data(integer, mode, ordering, password):
