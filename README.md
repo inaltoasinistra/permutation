@@ -3,8 +3,8 @@ permutation
 Hide your seed in a deck of cards and don't worry
 
 $ permutation --sep , encode
-BIP39 seed: tragedia malinteso attorno lacuna invece michele produrre vispo
-            brillante buio valgo umano
+BIP39 seed: tragedia,malinteso,attorno,lacuna,invece,michele,produrre,vispo,
+            brillante,buio,valgo,umano
 Insert the password: passw0rd
 Confirm the password: passw0rd
 

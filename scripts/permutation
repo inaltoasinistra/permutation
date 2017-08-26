@@ -3,7 +3,9 @@
 usage:
     permutation encode //
     permutation decode //
-    permutation help //
+    permutation languages //
+    permutation orderings //
+    permutation -h //
 
 e.g. tragedia malinteso attorno lacuna invece michele produrre vispo
      brillante buio valgo umano
@@ -63,21 +65,21 @@ def main():
 
     args = parser.parse_args()
 
-    password = args.password or get_passwd()
-
     if args.mode == 'encode':
         seed = args.seed or input('BIP39 seed: ')
         integer = mnemonic_to_integer(seed.split(
             None if args.sep == ' ' else args.sep))
         log('decrypted integer', integer)
-        integer = crypt_data(integer, args.mode, args.ordering, password)
+        integer = crypt_data(integer, args.mode, args.ordering,
+                             args.password or get_passwd())
         log('encrypted integer', integer)
         print(args.sep.join(decode(args.ordering, integer)))
     elif args.mode == 'decode':
         perm = args.permutation or input('Cards permutation: ')
         integer = encode([word.strip() for word in perm.split(args.sep)])
         log('encrypted integer', integer)
-        integer = crypt_data(integer, args.mode, args.ordering, password)
+        integer = crypt_data(integer, args.mode, args.ordering,
+                             args.password or get_passwd())
         log('decrypted integer', integer)
         print(args.sep.join(integer_to_mnemonic(integer, args.language)))
     elif args.mode == 'languages':
