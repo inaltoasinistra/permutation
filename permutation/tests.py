@@ -1,13 +1,13 @@
 from unittest import TestCase, main, skip
 import random
 import os
-import sys
 import json
+from random import choice
 from permutation import ordering, mapping, mnemonic
 from permutation.mapping import *
 from permutation.ordering import *
 from permutation.mnemonic import *
-from permutation.encryption import *
+from permutation.mnemonic import WORDS_NUMBER, get_wordlist
 from permutation.utils import *
 
 
@@ -115,6 +115,34 @@ class ProbabilisticTest(PermutationTestCase):
             perm = integer_to_permutation(integer, number)
             check = permutation_to_integer(perm)
             self.assertEqual(integer, check)
+
+    def test_zero_padding(self):
+        """The encrypted integer must seem a random number"""
+        # Check that the encrypted integer has no padding
+        n = 200
+        english = get_wordlist('english')
+        ordering_key = 'french-symbols'
+        available_bits = log2(fact(get_ordering_length(ordering_key)) // 2)
+        res = []
+
+        for _ in range(n):
+            for m in WORDS_NUMBER[:-2]:
+                seed = [choice(english) for _ in range(m)]
+                print(seed)
+                clear = mnemonic_to_integer(seed)
+                encrypted = crypt_data(
+                    clear, 'encode', ordering_key, 'test:1')
+
+                used = log2(encrypted)
+                unused_bits = available_bits - used
+                res.append(unused_bits)
+
+        def avg(lis):
+            """Return average"""
+            return sum(lis) / len(lis)
+
+        # We accept 2 unused bits
+        self.assertLessEqual(avg(res), 2)
 
 
 class OrderingTest(PermutationTestCase):
