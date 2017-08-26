@@ -128,7 +128,6 @@ class ProbabilisticTest(PermutationTestCase):
         for _ in range(n):
             for m in WORDS_NUMBER[:-2]:
                 seed = [choice(english) for _ in range(m)]
-                print(seed)
                 clear = mnemonic_to_integer(seed)
                 encrypted = crypt_data(
                     clear, 'encode', ordering_key, 'test:1')

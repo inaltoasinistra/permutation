@@ -36,7 +36,7 @@ def b2x(bb):
 
 def log(*args):
     """ print to stderr """
-    print(*args, file=sys.stderr)
+    # print(*args, file=sys.stderr)
 
 
 def crypt_data(integer, mode, ordering, password):
