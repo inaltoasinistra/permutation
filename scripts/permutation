@@ -54,6 +54,13 @@ def main():
     parser.add_argument('--permutation-unsafe', dest='permutation', type=str,
                         help='*UNSAFE*')
 
+    print('!!! WARNING !!!')
+    print('  This is experimental software.')
+    print('  Do not use it in production environment, '
+          'backward compatibility is not guaranteed.')
+    print('!!! WARNING !!!')
+    print()
+
     args = parser.parse_args()
 
     password = args.password or get_passwd()
