@@ -1,5 +1,5 @@
 #!/bin/sh
-PYTHONPATH=.
+export PYTHONPATH=.
 
 SEEDS="tragedia,malinteso,attorno attorno,lacuna,invece,michele,produrre,vispo tragedia,malinteso,attorno,lacuna,invece,michele,produrre,vispo,brillante,buio,valgo,umano"
 
