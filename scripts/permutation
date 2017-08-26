@@ -121,8 +121,8 @@ def crypt_data(integer, mode, ordering, password):
 
     if mode == 'encode':
         used = log2(integer)
-        total = log2(fact(get_ordering_length(ordering)))
-        log('Used bits %.2f - %.2f = %.2f' % (used, total, total - used))
+        total = log2(fact(get_ordering_length(ordering)) // 2)
+        log('Used bits %.2f - %.2f = %.2f' % (total, used, total - used))
         # If we leave suspicious null bits on the right (or in other places)
         # plausible deniability is lost
 
