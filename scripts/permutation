@@ -15,11 +15,12 @@ e.g. tragedia malinteso attorno lacuna invece michele produrre vispo
 """
 import argparse
 from getpass import getpass
+from permutation.encryption import crypt_data
 from permutation.ordering import (
     encode, decode, get_orderings)
 from permutation.mnemonic import (
     mnemonic_to_integer, integer_to_mnemonic, get_languages)
-from permutation.utils import log, crypt_data
+from permutation.utils import log
 
 
 def get_passwd():

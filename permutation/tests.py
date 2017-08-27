@@ -2,10 +2,14 @@ from unittest import TestCase, main, skip
 import random
 import os
 import json
+from math import log2
 from random import choice
 from permutation import ordering, mapping, mnemonic
 from permutation.mapping import *
+from permutation.mapping import fact
 from permutation.ordering import *
+from permutation.encryption import *
+from permutation.encryption import crypt, decrypt
 from permutation.mnemonic import *
 from permutation.mnemonic import WORDS_NUMBER, get_wordlist
 from permutation.utils import *
