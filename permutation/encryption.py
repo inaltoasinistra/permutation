@@ -16,12 +16,8 @@ assert VERSION < 8
 
 def get_key(password):
     """ utf-8 password to 64 byte of key """
-
     try:
-        # 2**14 = 16384
-        cycles = min(int(password.split(':')[-1]), 14)
-        if cycles <= 0:
-            raise ValueError
+        cycles = int(password.split('::')[-1])
     except ValueError:
         cycles = 21
     return scrypt.hash(password, 'permutation', N=2**cycles, buflen=16)

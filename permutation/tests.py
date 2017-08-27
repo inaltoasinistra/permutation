@@ -134,7 +134,7 @@ class ProbabilisticTest(PermutationTestCase):
                 seed = [choice(english) for _ in range(m)]
                 clear = mnemonic_to_integer(seed)
                 encrypted = crypt_data(
-                    clear, 'encode', ordering_key, 'test:1')
+                    clear, 'encode', ordering_key, 'test::1')
 
                 used = log2(encrypted)
                 unused_bits = available_bits - used
@@ -311,8 +311,6 @@ class MnemonicTest(PermutationTestCase):
 
         for words in self.ita:
             split = words[0].split()
-            print(split)
-            print(mnemonic_to_integer(split))
             self.assertEqual(
                 split, integer_to_mnemonic(
                     mnemonic_to_integer(split), 'italian'), split)
@@ -347,7 +345,7 @@ class EncryptionTest(PermutationTestCase):
 
     def test_back_and_forth(self):
         """Encrypt end decrypt"""
-        password = 'passw0rd:14'
+        password = 'passw0rd::14'
         data = bytes([random.getrandbits(8) for _ in range(19)])
         self.check(data, password)
         data = bytes([random.getrandbits(8) for _ in range(18)])
