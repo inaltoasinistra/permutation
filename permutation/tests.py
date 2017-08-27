@@ -393,10 +393,5 @@ class IntegerBytesConversionTest(PermutationTestCase):
             b'\x00\x11\x22\x33\x44', integer_to_bytes(0x11223344, 5))
 
 
-class ScriptTest(PermutationTestCase):
-    """ Test the permutation script """
-    # TODO
-
-
 if __name__ == "__main__":
     main()
