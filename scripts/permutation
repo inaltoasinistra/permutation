@@ -4,7 +4,7 @@ usage:
     permutation encode //
     permutation decode //
     permutation languages //
-    permutation orderings //
+    permutation decks //
     permutation -h //
 
 e.g. tragedia malinteso attorno lacuna invece michele produrre vispo
@@ -39,8 +39,8 @@ def get_passwd():
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('mode', type=str,
-                        help='encode, decode, languages or orderings')
-    parser.add_argument('--ordering', dest='ordering', type=str,
+                        help='encode, decode, languages or desks')
+    parser.add_argument('--deck', dest='deck', type=str,
                         default='french-symbols',
                         help='objects of the permutation')
     parser.add_argument('--language', dest='language', type=str,
@@ -48,7 +48,7 @@ def main():
                         help='~ of the seed wordlist')
     parser.add_argument('--sep', dest='sep', type=str,
                         default=' ',
-                        help='separator of permutation labels')
+                        help='separator of permutation objects')
     # Unsafe arguments
     parser.add_argument('--seed-unsafe', dest='seed', type=str,
                         help='BIP39 seed. *UNSAFE*')
@@ -57,35 +57,36 @@ def main():
     parser.add_argument('--permutation-unsafe', dest='permutation', type=str,
                         help='*UNSAFE*')
 
-    print('!!! WARNING !!!')
-    print('  This is experimental software.')
-    print('  Do not use it in production environment, '
-          'backward compatibility is not guaranteed.')
-    print('!!! WARNING !!!')
-    print()
-
     args = parser.parse_args()
+
+    if args.mode in ('encode', 'decode'):
+        print('!!! WARNING !!!')
+        print('  This is experimental software.')
+        print('  Do not use it in production environment, '
+              'backward compatibility is not guaranteed.')
+        print('!!! WARNING !!!')
+        print()
 
     if args.mode == 'encode':
         seed = args.seed or input('BIP39 seed: ')
         integer = mnemonic_to_integer(seed.split(
             None if args.sep == ' ' else args.sep))
         log('decrypted integer', integer)
-        integer = crypt_data(integer, args.mode, args.ordering,
+        integer = crypt_data(integer, args.mode, args.deck,
                              args.password or get_passwd())
         log('encrypted integer', integer)
-        print(args.sep.join(decode(args.ordering, integer)))
+        print(args.sep.join(decode(args.deck, integer)))
     elif args.mode == 'decode':
         perm = args.permutation or input('Cards permutation: ')
         integer = encode([word.strip() for word in perm.split(args.sep)])
         log('encrypted integer', integer)
-        integer = crypt_data(integer, args.mode, args.ordering,
+        integer = crypt_data(integer, args.mode, args.deck,
                              args.password or get_passwd())
         log('decrypted integer', integer)
         print(args.sep.join(integer_to_mnemonic(integer, args.language)))
     elif args.mode == 'languages':
         print(' '.join(get_languages()))
-    elif args.mode == 'orderings':
+    elif args.mode == 'decks':
         print(' '.join(get_orderings()))
 
 
