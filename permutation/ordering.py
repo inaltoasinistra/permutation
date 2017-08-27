@@ -77,6 +77,7 @@ def get_orderings():
     directory = os.path.join(os.path.dirname(__file__), 'data', 'ordering')
     return [y[:-4] for y in os.listdir(directory) if y.endswith('.txt')]
 
+
 __all__ = [
     "encode",
     "decode",

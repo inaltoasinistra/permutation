@@ -88,5 +88,6 @@ def main():
     elif args.mode == 'orderings':
         print(' '.join(get_orderings()))
 
+
 if __name__ == "__main__":
     main()
