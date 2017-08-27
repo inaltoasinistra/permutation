@@ -100,6 +100,8 @@ def crypt_data(integer, mode, ordering, password):
         if useless_bits:
             # If there is padding we need one more byte to decode it
             length += 1
+    else:
+        assert False, 'Mode not valid'
     data = integer_to_bytes(integer, length)
     log('input in bytes', b2x(data), len(data))
     if mode == 'encode':

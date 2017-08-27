@@ -391,5 +391,31 @@ class IntegerBytesConversionTest(PermutationTestCase):
             b'\x00\x11\x22\x33\x44', integer_to_bytes(0x11223344, 5))
 
 
+class VectorsTest(TestCase):
+    """ Test compatibility with older versions """
+    DATA = get_test_data()['deck_to_seed']
+
+    def test_deck_to_seed(self):
+        """Check validity of deck_to_seed data"""
+
+        for passwd, seed_in, perm_in in self.DATA:
+            # Decode
+            encrypted = encode(perm_in.split())
+            clear = crypt_data(encrypted, 'decode', 'french-symbols', passwd)
+            seed_out = ' '.join(integer_to_mnemonic(clear))
+            self.assertEqual(seed_in, seed_out)
+
+            # Encode
+            clear = mnemonic_to_integer(seed_in.split())
+            encrypted = crypt_data(clear, 'encode', 'french-symbols', passwd)
+            perm_out = ' '.join(decode('french-symbols', encrypted))
+
+            encrypted = encode(perm_out.split())
+            clear = crypt_data(encrypted, 'decode', 'french-symbols', passwd)
+            seed_out = ' '.join(integer_to_mnemonic(clear))
+            self.assertEqual(seed_in, seed_out)
+
+
+
 if __name__ == "__main__":
     main()
